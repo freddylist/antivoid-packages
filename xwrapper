@@ -1,0 +1,35 @@
+#!/bin/bash
+#
+# Build by directory instead of by package name.
+
+set -e
+
+# Canonicalize distdir for ancestor check
+XBPS_DISTDIR="$(readlink -f "$(xdistdir)")" || exit 1
+
+# Extract last argument.
+pkgdir="$(readlink -f "${*: -1}")"
+set -- "${@:1:$#-1}"
+
+# In case we were passed a template, set pkgdir to parent.
+if [[ "${pkgdir##*/}" = "template" ]]; then
+	pkgdir="${pkgdir%/*}"
+fi
+
+[[ ! -f "${pkgdir}/template" ]] && { printf >&2 "No template found for '%s'\n" "$pkgdir"; exit 1; }
+
+pkgname="${pkgdir##*/}"
+
+# Package already in distdir
+if [[ -n "$(find "${XBPS_DISTDIR}/srcpkgs" -samefile "$pkgdir" -print -quit)" ]]; then
+	"${XBPS_DISTDIR}/xbps-src" "$@" "$pkgname"
+	exit 0
+fi
+
+xbps_pkgdir="${XBPS_DISTDIR}/srcpkgs/${pkgname}"
+
+# Sanitize before copying
+rm -rf "$xbps_pkgdir"
+cp -r "$pkgdir" "$xbps_pkgdir"
+
+"${XBPS_DISTDIR}/xbps-src" "$@" "$pkgname"

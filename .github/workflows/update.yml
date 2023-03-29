@@ -1,0 +1,86 @@
+name: Update templates
+
+on:
+  schedule:
+    - cron: '22 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    container:
+      image: 'ghcr.io/void-linux/xbps-src-masterdir:latest-x86_64'
+      env:
+        PATH: '/usr/libexec/chroot-git:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/sbin:/usr/local/bin:/tmp/bin'
+        HOSTREPO: /hostrepo
+
+    steps:
+      - name: Setup xbps
+        run: |
+          # Switch to repo-ci mirror
+          mkdir -p /etc/xbps.d && cp /usr/share/xbps.d/*-repository-*.conf /etc/xbps.d/
+          sed -i 's|repo-default|repo-ci|g' /etc/xbps.d/*-repository-*.conf
+
+          # Sync and upgrade once, assume error comes from xbps update
+          xbps-install -Syu || xbps-install -yu xbps
+
+          # Upgrade again (in case there was a xbps update)
+          xbps-install -yu
+
+          # Install xbps-src update-check dependencies
+          xbps-install -y curl grep
+
+      - name: Clone and checkout void-packages
+        uses: freddylist/treeless-checkout-action@v1
+        with:
+          ref: refs/heads/master
+          repository: void-linux/void-packages
+
+      - name: Clone and checkout antivoid-packages
+        uses: freddylist/treeless-checkout-action@v1
+        with:
+          server_url: "https://${{ github.actor }}:${{ secrets.PAT }}@github.com"
+          path: antivoid-packages
+
+      - name: Create hostrepo and prepare masterdir
+        run: |
+         ln -s "$(pwd)" /hostrepo &&
+         common/travis/set_mirror.sh &&
+         common/travis/prepare.sh &&
+         common/travis/fetch-xtools.sh
+
+      - name: Update templates
+        run: |
+          for pkg in antivoid-packages/srcpkgs/*; do
+            antivoid-packages/xupdate -f -H "$HOME"/hostdir "$pkg"
+          done
+
+      - name: Push changes
+        env:
+          PAT: ${{ secrets.PAT }}
+        run: |
+          cd antivoid-packages
+
+          git config --global user.email "antivoid-packages@freddylist.xyz"
+          git config --global user.name "github-actions"
+
+          for pkg in $(git diff --name-only srcpkgs | cut -d/ -f2 | uniq); do
+            template="srcpkgs/${pkg}/template"
+            new_version="$(sed -n 's/^version=\(.*\)/\1/p' "$template")"
+            msg="${pkg}: update to ${new_version}."
+            branch="update-${pkg}"
+
+            git switch -C "$branch" main
+            git add "srcpkgs/${pkg}"
+            git commit -m "$msg"
+            git push --force --set-upstream origin "HEAD:${branch}"
+
+            curl -L \
+              -X POST \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer $PAT" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              https://api.github.com/repos/freddylist/antivoid-packages/pulls \
+              -d "{\"title\":\"$msg\",\"head\":\"$branch\",\"base\":\"main\"}"
+          done
