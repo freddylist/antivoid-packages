@@ -1,0 +1,163 @@
+diff --git a/jail/Makefile b/jail/Makefile
+index 4419d1e..2697b82 100644
+--- a/jail/Makefile
++++ b/jail/Makefile
+@@ -2,7 +2,7 @@ OBJS = jail_uml.o
+ BIN = jail_uml
+ CFLAGS ?= -g -Wall
+ 
+-SBIN_DIR ?= /usr/sbin
++BIN_DIR ?= /usr/bin
+ 
+ all : $(BIN)
+ 
+@@ -10,8 +10,8 @@ $(BIN) : $(OBJS)
+ 	$(CC) $(CFLAGS) -o $(BIN) $(OBJS)
+ 
+ install : $(BIN)
+-	install -d $(DESTDIR)$(SBIN_DIR)
+-	install -s $(BIN) $(DESTDIR)$(SBIN_DIR)
++	install -d $(DESTDIR)$(BIN_DIR)
++	install -s $(BIN) $(DESTDIR)$(BIN_DIR)
+ 
+ clean :
+ 	rm -rf *~ $(BIN) $(OBJS) cell[0-9]* core* tty_log_cell*
+diff --git a/jailtest/Makefile b/jailtest/Makefile
+index 1029df8..401df2a 100644
+--- a/jailtest/Makefile
++++ b/jailtest/Makefile
+@@ -9,7 +9,7 @@ all : $(BIN)
+ $(BIN) : $(OBJS)
+ 	$(CC) $(CFLAGS) -o $(BIN) $(OBJS)
+ 
+-clean : 
++clean :
+ 	rm -f $(BIN) $(OBJS) *~
+ 
+ install : $(BIN)
+diff --git a/mconsole/Makefile b/mconsole/Makefile
+index d015a34..8dac2e2 100644
+--- a/mconsole/Makefile
++++ b/mconsole/Makefile
+@@ -10,7 +10,7 @@ all : $(BIN)
+ $(BIN) : $(OBJS)
+ 	$(CC) $(CFLAGS) -o $(BIN) $(OBJS) $(LIBS)
+ 
+-clean : 
++clean :
+ 	rm -f $(BIN) $(OBJS) *~
+ 
+ install : $(BIN)
+diff --git a/moo/Makefile b/moo/Makefile
+index ee4c44f..d2601c3 100644
+--- a/moo/Makefile
++++ b/moo/Makefile
+@@ -18,7 +18,7 @@ uml_mkcow : $(uml_mkcow_OBJS)
+ 
+ $(uml_moo_OBJS) $(uml_mkcow_OBJS) : cow.h cow_sys.h
+ 
+-clean : 
++clean :
+ 	rm -f $(foreach bin,$(BIN),$($(bin)_OBJS)) $(BIN) $(OBJS) *~
+ 
+ install : $(BIN)
+diff --git a/port-helper/Makefile b/port-helper/Makefile
+index 7ce200b..56f99b0 100644
+--- a/port-helper/Makefile
++++ b/port-helper/Makefile
+@@ -10,7 +10,7 @@ all : $(BIN)
+ $(BIN) : $(OBJS)
+ 	$(CC) $(CFLAGS) -o $(BIN) $(OBJS) $(LIBS)
+ 
+-clean : 
++clean :
+ 	rm -f $(BIN) $(OBJS) *~
+ 
+ install : $(BIN)
+diff --git a/tunctl/Makefile b/tunctl/Makefile
+index 81cab8a..b158145 100644
+--- a/tunctl/Makefile
++++ b/tunctl/Makefile
+@@ -9,7 +9,7 @@ all : $(BIN)
+ $(BIN) : $(OBJS)
+ 	$(CC) $(CFLAGS) -o $(BIN) $(OBJS)
+ 
+-clean : 
++clean :
+ 	rm -f $(BIN) $(OBJS) *~
+ 
+ install : $(BIN)
+diff --git a/uml_net/Makefile b/uml_net/Makefile
+index f877845..35d52ed 100644
+--- a/uml_net/Makefile
++++ b/uml_net/Makefile
+@@ -17,7 +17,7 @@ all : $(BIN)
+ $(BIN) : $(OBJS)
+ 	$(CC) $(CFLAGS) -o $(BIN) $(OBJS)
+ 
+-clean : 
++clean :
+ 	rm -f $(BIN) $(OBJS) *~
+ 
+ install : $(BIN)
+diff --git a/uml_net/host.c b/uml_net/host.c
+index 24e477e..860318e 100644
+--- a/uml_net/host.c
++++ b/uml_net/host.c
+@@ -10,6 +10,7 @@
+ #include <ctype.h>
+ #include <sys/wait.h>
+ #include <sys/stat.h>
++#include <sys/sysmacros.h>
+ #include "output.h"
+ #include "host.h"
+ 
+diff --git a/uml_switch/Makefile b/uml_switch/Makefile
+index 7f9c5e1..f7fce80 100644
+--- a/uml_switch/Makefile
++++ b/uml_switch/Makefile
+@@ -16,7 +16,7 @@ all : $(BIN)
+ $(BIN) : $(OBJS)
+ 	$(CC) $(CFLAGS) -o $(BIN) $(OBJS)
+ 
+-clean : 
++clean :
+ 	rm -f $(BIN) $(OBJS) *~
+ 
+ install : $(BIN)
+diff --git a/umlfs/Makefile b/umlfs/Makefile
+index ddffc81..b15a298 100644
+--- a/umlfs/Makefile
++++ b/umlfs/Makefile
+@@ -1,7 +1,8 @@
+ BIN = uml_mount
+ OBJS = $(BIN).o
++CFLAGS ?= -g -Wall
+ # I have the FUSE headers in /usr/local/include
+-CFLAGS = -g -Wall -D_FILE_OFFSET_BITS=64 -I/usr/local/include
++override CFLAGS += -D_FILE_OFFSET_BITS=64 -I/usr/local/include
+ LIBS = -lfuse
+ 
+ BIN_DIR ?= /usr/bin
+@@ -11,7 +12,7 @@ all : $(BIN)
+ $(BIN) : $(OBJS)
+ 	$(CC) $(CFLAGS) -o $(BIN) $(OBJS) $(LIBS)
+ 
+-clean : 
++clean :
+ 	rm -f $(BIN) $(OBJS) *~
+ 
+ install : $(BIN)
+diff --git a/watchdog/Makefile b/watchdog/Makefile
+index 3cdfaaf..e1c15ff 100644
+--- a/watchdog/Makefile
++++ b/watchdog/Makefile
+@@ -9,7 +9,7 @@ all : $(BIN)
+ $(BIN) : $(OBJS)
+ 	$(CC) $(CFLAGS) -o $(BIN) $(OBJS)
+ 
+-clean : 
++clean :
+ 	rm -f $(BIN) $(OBJS) *~
+ 
+ install : $(BIN)
