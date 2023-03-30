@@ -9,14 +9,15 @@ XBPS_DISTDIR="$(readlink -f "$(xdistdir)")" || exit 1
 
 # Extract last argument.
 pkgdir="$(readlink -f "${*: -1}")"
-set -- "${@:1:$#-1}"
 
 # In case we were passed a template, set pkgdir to parent.
 if [[ "${pkgdir##*/}" = "template" ]]; then
 	pkgdir="${pkgdir%/*}"
 fi
 
-[[ ! -f "${pkgdir}/template" ]] && { printf >&2 "No template found for '%s'\n" "$pkgdir"; exit 1; }
+# We probably weren't passed a path to a template,
+# could've been another target (like clean) or a package already in distdir.
+[[ ! -f "${pkgdir}/template" ]] && { "${XBPS_DISTDIR}/xbps-src" "$@"; exit 1; }
 
 pkgname="${pkgdir##*/}"
 
@@ -28,8 +29,10 @@ fi
 
 xbps_pkgdir="${XBPS_DISTDIR}/srcpkgs/${pkgname}"
 
-# Sanitize before copying
+# Sanitize before copying.
 rm -rf "$xbps_pkgdir"
 cp -r "$pkgdir" "$xbps_pkgdir"
 
+# Remove last argument $@.
+set -- "${@:1:$#-1}"
 "${XBPS_DISTDIR}/xbps-src" "$@" "$pkgname"

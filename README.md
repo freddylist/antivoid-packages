@@ -29,7 +29,7 @@ Probably harmful. Don't use unless you understand why.
 ### xwrapper
 
 ```
-xwrapper [xbps-src options] <*path* to (directory of) template file (NOT NAME!)>
+xwrapper [xbps-src options] [xbps-src target] [name or path to package or template]
 ```
 
-`xwrapper` will copy the directory of the passed template file to `${XBPS_DISTDIR}/srcpkgs` and then invoke `xbps-src` with whatever options you gave.
+`xwrapper` will copy the package (or the directory of template file) if given to `${XBPS_DISTDIR}/srcpkgs`, then invoke `xbps-src` with whatever options you gave.
