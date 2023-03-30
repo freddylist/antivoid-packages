@@ -1,0 +1,26 @@
+# Template file for 'grapejuice-git'
+pkgname=grapejuice-git
+_reponame=grapejuice
+version=20230326
+revision=1
+_commit=4c62170a9ff6f784d8937db542ef1166eabd1ae8
+archs="i686 x86_64"
+build_style=python3-module
+hostmakedepends="tar python3-setuptools python3-pip gettext"
+depends="python3-psutil python3-gobject python3-wheel python3-requests python3-Unidecode python3-click python3-pydantic"
+short_desc="Wine wrapper for Roblox"
+maintainer="Freddy List <antivoid-packages@freddylist.xyz>"
+license="GPL-3.0-only"
+homepage="https://brinkervii.gitlab.io/grapejuice/"
+distfiles="https://gitlab.com/brinkervii/${_reponame}/-/archive/${_commit}/${_reponame}-${_commit}.tar.gz"
+checksum=55cfd8d721ea1d492429263bb092625783cb5586858d5532e379a04a809c2aa0
+conflicts=grapejuice
+make_check=no # The tests are stupid
+
+do_install() {
+	export PYTHONPATH="${wrksrc}/src"
+	python3 -m grapejuice_packaging linux_package
+	vmkdir "${py3_sitelib}"
+	tar -xf dist/linux_package/*.tar.gz -C "${DESTDIR}"
+	mv "${DESTDIR}/usr/lib/python3/dist-packages"/* "${DESTDIR}/${py3_sitelib}"
+}
