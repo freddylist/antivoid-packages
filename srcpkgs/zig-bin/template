@@ -1,0 +1,40 @@
+# Template file for 'zig-bin'
+pkgname=zig-bin
+version=0.10.1
+revision=1
+archs="x86_64 aarch64 i686"
+short_desc="Programming language designed for robustness, optimality, and clarity"
+maintainer="Freddy List <antivoid-packages@freddylist.xyz>"
+license="MIT"
+homepage="https://ziglang.org/"
+changelog="https://ziglang.org/download/${version}/release-notes.html"
+distfiles="https://ziglang.org/download/${version}/zig-linux-x86_64-${version}.tar.xz
+ https://ziglang.org/download/${version}/zig-linux-aarch64-${version}.tar.xz
+ https://ziglang.org/download/${version}/zig-linux-i386-${version}.tar.xz"
+checksum="6699f0e7293081b42428f32c9d9c983854094bd15fee5489f12c4cf4518cc380
+ db0761664f5f22aa5bbd7442a1617dd696c076d5717ddefcc9d8b95278f71f5d
+ 8c710ca5966b127b0ee3efba7310601ee57aab3dd6052a082ebc446c5efb2316"
+conflicts=zig
+
+do_install() {
+	case ${XBPS_TARGET_MACHINE} in
+		x86_64)
+			cd "zig-linux-x86_64-${version}"
+			;;
+		aarch64)
+			cd "zig-linux-aarch64-${version}"
+			;;
+		i686)
+			cd "zig-linux-i386-${version}"
+			;;
+	esac
+
+	vlicense LICENSE
+	vbin zig
+
+	vmkdir usr/lib/zig
+	vcopy lib/* usr/lib/zig
+
+	vmkdir usr/share/doc/zig
+	vcopy doc/* usr/share/doc/zig
+}
