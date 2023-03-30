@@ -1,0 +1,67 @@
+# Template file for 'ivpn'
+pkgname=ivpn
+version=3.10.15
+revision=1
+archs="x86_64"
+hostmakedepends="curl libcurl git go nodejs"
+makedepends="wireless_tools-devel"
+depends="openvpn wireless_tools glibc"
+short_desc="IVPN daemon and CLI"
+maintainer="Freddy List <antivoid-packages@freddylist.xyz>"
+license="GPL-3.0-only"
+homepage="https://www.ivpn.net"
+changelog="https://github.com/ivpn/desktop-app/blob/master/CHANGELOG.md"
+distfiles="https://github.com/ivpn/desktop-app/archive/v${version}.tar.gz"
+checksum=14b7cbc8bd263485ac6c4dd20bcf3c418a937c85e4ae59fc39b99a9ee0ba2e01
+nopie=yes
+
+do_build() {
+	export IVPN_BUILD_SKIP_GLIBC_VER_CHECK=yes
+
+	daemon/References/Linux/scripts/build-all.sh -v "${version}" -c "v${version}"
+
+	cli/References/Linux/compile-cli.sh -v "${version}" -c "v${version}"
+
+	(cd "${wrksrc}/ui" && npm install && "./References/Linux/compile-ui.sh")
+}
+
+do_install() {
+	local daemonlinuxdir="daemon/References/Linux"
+	local clilinuxdir="cli/References/Linux"
+
+	vbin "${daemonlinuxdir}/scripts/_out_bin/ivpn-service"
+	vbin "${clilinuxdir}/_out_bin/ivpn"
+
+	local commonetcfiles="daemon/References/common/etc"
+	vinstall "${daemonlinuxdir}/etc/client.down" 700 opt/ivpn/etc
+	vinstall "${daemonlinuxdir}/etc/client.up" 700 opt/ivpn/etc
+	vinstall "${daemonlinuxdir}/etc/firewall.sh" 700 opt/ivpn/etc
+	vinstall "${daemonlinuxdir}/etc/splittun.sh" 700 opt/ivpn/etc
+	vinstall "${commonetcfiles}/servers.json" 600 opt/ivpn/etc
+	vinstall "${commonetcfiles}/dnscrypt-proxy-template.toml" 600 opt/ivpn/etc
+	vinstall "${commonetcfiles}/ca.crt" 400 opt/ivpn/etc
+	vinstall "${commonetcfiles}/ta.key" 400 opt/ivpn/etc
+
+	vinstall "${daemonlinuxdir}/_deps/wireguard-tools_inst/wg-quick" 755 opt/ivpn/wireguard-tools
+	vinstall "${daemonlinuxdir}/_deps/wireguard-tools_inst/wg" 755 opt/ivpn/wireguard-tools
+
+	vinstall "${daemonlinuxdir}/_deps/dnscryptproxy_inst/dnscrypt-proxy" 755 opt/ivpn/dnscrypt-proxy
+	vinstall "${daemonlinuxdir}/_deps/obfs4proxy_inst/obfs4proxy" 755 opt/ivpn/obfsproxy
+
+	vsv ivpn-service
+}
+
+ivpn-ui_package() {
+	short_desc="IVPN UI"
+
+	pkg_install() {
+		local uilinuxdir="${wrksrc}/ui/References/Linux"
+
+		vmkdir opt/ivpn/ui/bin
+		vcopy "${uilinuxdir}/ui/ivpnicon.svg" opt/ivpn/ui
+		vcopy "ui/dist_electron/linux-unpacked/*" opt/ivpn/ui/bin
+
+		vmkdir usr/share/applications
+		vcopy "${uilinuxdir}/ui/IVPN.desktop" usr/share/applications
+	}
+}
