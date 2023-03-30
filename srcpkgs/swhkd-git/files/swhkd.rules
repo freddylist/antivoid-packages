@@ -1,0 +1,5 @@
+polkit.addRule(function(action, subject) {
+	if (action.id == "com.github.swhkd.pkexec" && subject.isInGroup("swhkd")) {
+		return polkit.Result.YES;
+	}
+});
