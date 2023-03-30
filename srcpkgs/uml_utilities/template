@@ -1,0 +1,13 @@
+# Template file for 'uml_utilities'
+pkgname=uml_utilities
+version=20070815
+revision=1
+archs="x86_64"
+build_style=gnu-makefile
+makedepends="readline-devel fuse-devel"
+short_desc="User Mode Linux utilities"
+maintainer="Freddy List <antivoid-packages@freddylist.xyz>"
+license="GPL-3.0-or-later"
+homepage="https://user-mode-linux.sourceforge.net"
+distfiles="https://user-mode-linux.sourceforge.net/uml_utilities_${version}.tar.bz2"
+checksum=f815f591a1c177729546969acf720958c5fd72b8d4d36bae26fdc5b64669b60e
