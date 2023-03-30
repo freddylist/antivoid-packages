@@ -1,0 +1,40 @@
+# Template file for 'brave-bin'
+pkgname=brave-bin
+version=1.49.132
+revision=1
+archs="x86_64"
+hostmakedepends="xz tar"
+depends="upower"
+short_desc="Secure, fast and private web browser with ad blocker"
+maintainer="Freddy List <antivoid-packages@freddylist.xyz>"
+license="MPL-2.0"
+homepage="https://brave.com/"
+changelog="https://github.com/brave/brave-browser/blob/master/CHANGELOG_DESKTOP.md"
+_filename="brave-browser_${version}_amd64.deb"
+distfiles="https://github.com/brave/brave-browser/releases/download/v${version}/${_filename}"
+checksum=eb2e35738dbe8fd6ac7f97437d4b6af656718d167d9f50dccafd51cd30f5b99e
+nostrip=yes
+
+do_extract() {
+	ar -x "${XBPS_SRCDISTDIR}/${pkgname}-${version}/${_filename}"
+}
+
+do_install() {
+	tar -xf data.tar.xz -C "${DESTDIR}"
+
+	local brave_dir="${DESTDIR}/opt/brave.com/brave"
+
+	vlicense "${brave_dir}/LICENSE"
+
+	for logo in "${brave_dir}"/product_logo_*.png; do
+		size=${logo##*_}
+		size=${size%.*}
+
+		vinstall "${logo}" 644 "usr/share/icons/hicolor/${size}x${size}/apps" 'brave-browser.png'
+	done
+
+	rm -r \
+		"${DESTDIR}/etc" \
+		"${brave_dir}/cron" \
+		"${brave_dir}"/product_logo_*
+}
