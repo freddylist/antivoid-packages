@@ -1,0 +1,3 @@
+site=https://brave-browser-downloads.s3.brave.com/latest/release.version
+pattern='\K[\d.]+'
+single_directory=yes
