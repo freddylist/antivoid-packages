@@ -1,0 +1,31 @@
+# Template file for 'river-latest'
+# This is seriously stupid but I don't have the skills to help
+# package llvm15 necessary to build zig 0.10 which is needed to build river
+pkgname=river-latest
+version=0.2.4
+revision=1
+#archs="x86_64 aarch64 i686" # zig-bin doesn't work on i686 for some reason :(
+archs="x86_64 aarch64" # zig-bin can only build on these
+# Gotta source it ourself since zig-build buildstyle installs zig which conflicts with zig-bin
+#build_style=zig-build
+configure_args="$(vopt_if xwayland -Dxwayland) -Dpie"
+hostmakedepends="zig-bin pkg-config wayland-devel scdoc"
+makedepends="wlroots-devel libevdev-devel"
+depends="$(vopt_if xwayland xorg-server-xwayland)"
+short_desc="Dynamic tiling Wayland compositor"
+maintainer="Freddy List <antivoid-packages@freddylist.xyz>"
+license="GPL-3.0-or-later"
+homepage="https://github.com/riverwm/river"
+distfiles="${homepage}/releases/download/v${version}/river-${version}.tar.gz"
+checksum=26c1c41a65ce3804069afad6988410515cf478d2b76303ebc699766d3d4dc69f
+conflicts=river
+
+build_options="xwayland"
+build_options_default="xwayland"
+desc_option_xwayland="Enable Xwayland support"
+
+source "${XBPS_DISTDIR}/common/build-style/zig-build.sh"
+
+post_install() {
+	vsconf example/init
+}
