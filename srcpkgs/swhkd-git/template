@@ -1,0 +1,33 @@
+# Template file for 'swhkd-git'
+pkgname=swhkd-git
+version=20230131
+revision=1
+_commit=3b19fc33b32efde88311579152a1078a8004397c
+# hostmakedepends="rustup scdoc make"
+hostmakedepends="cargo scdoc make"
+depends="polkit"
+short_desc="Wayland sxhkd clone (works in TTY and X11 too)"
+maintainer="Freddy List <antivoid-packages@freddylist.xyz>"
+license="BSD-2-Clause"
+homepage="https://github.com/waycrate/swhkd"
+changelog="https://github.com/waycrate/swhkd/blob/main/CHANGELOG.md"
+distfiles="https://github.com/waycrate/swhkd/tarball/${_commit}>swhkd.tar.gz"
+checksum=6963fee7c8b006484edc91e9a741c2a8e7a8d0091e7c44417cc5108ede0afaa9
+conflicts=swhkd
+system_groups="swhkd"
+
+do_build() {
+	# rustup-init -y
+	# source "${HOME}/.cargo/env"
+	# make setup
+	make clean
+	make build
+}
+
+do_install() {
+	make DESTDIR="${DESTDIR}" install
+	#vsv swhkd
+	vinstall "${FILESDIR}/swhkd.rules" 644 /usr/share/polkit-1/rules.d/
+	vdoc "${FILESDIR}/README.voidlinux"
+	vlicense LICENSE
+}
