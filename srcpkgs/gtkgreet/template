@@ -1,0 +1,19 @@
+# Template file for 'gtkgreet'
+pkgname=gtkgreet
+version=0.7
+revision=1
+build_style=meson
+configure_args="-Dc_args=-Wno-error $(vopt_if layershell '' '-Dlayershell=disabled')"
+hostmakedepends="scdoc pkg-config"
+makedepends="$(vopt_if layershell gtk-layer-shell-devel) json-c-devel"
+depends="gtk+3"
+short_desc="GTK based greeter for greetd"
+maintainer="Freddy List <antivoid-packages@freddylist.xyz>"
+license="GPL-3.0-or-later"
+homepage="https://git.sr.ht/~kennylevinsen/gtkgreet"
+distfiles="https://git.sr.ht/~kennylevinsen/gtkgreet/archive/${version}.tar.gz"
+checksum=942e7fc84d6ededb5b833c1c71632e0f0502a9debff38a12c63b7bfb17450ef7
+
+build_options="layershell"
+desc_option_layershell='support for gtk-layer-shell'
+build_options_default="layershell"
