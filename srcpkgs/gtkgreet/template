@@ -12,7 +12,7 @@ maintainer="Freddy List <antivoid-packages@freddylist.xyz>"
 license="GPL-3.0-or-later"
 homepage="https://git.sr.ht/~kennylevinsen/gtkgreet"
 distfiles="https://git.sr.ht/~kennylevinsen/gtkgreet/archive/${version}.tar.gz"
-checksum=942e7fc84d6ededb5b833c1c71632e0f0502a9debff38a12c63b7bfb17450ef7
+checksum=eb4ba0e1e4f9cf888ce7b932b923f97521c2277032628cfc06bb86fecbad9373
 
 build_options="layershell"
 desc_option_layershell='support for gtk-layer-shell'
