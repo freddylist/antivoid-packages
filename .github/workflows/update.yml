@@ -60,6 +60,7 @@ jobs:
         env:
           PAT: ${{ secrets.PAT }}
         run: |
+          here="$(pwd)"
           cd antivoid-packages
 
           git config --global user.email "antivoid-packages@freddylist.xyz"
@@ -67,7 +68,7 @@ jobs:
 
           for pkg in $(git diff --name-only srcpkgs | cut -d/ -f2 | uniq); do
             template="srcpkgs/${pkg}/template"
-            new_version="$(sed -n 's/^version=\(.*\)/\1/p' "$template")"
+            new_version="$("$here"/xbps-src show "$pkg" | grep '^version:' | cut -f2)"
             msg="${pkg}: update to ${new_version}."
             branch="update-${pkg}"
 
