@@ -1,0 +1,9 @@
+# Ignore whatever random junk might be put in here
+/*
+!.github/
+!srcpkgs/
+!.gitignore
+!LICENSE
+!README.md
+!xupdate
+!xwrapper
