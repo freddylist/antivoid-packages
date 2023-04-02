@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VERSION=1.0.0
+VERSION=1.0.1
 
 TAR=tar
 command -v bsdtar >/dev/null && TAR=bsdtar
