@@ -3,7 +3,6 @@
 !.github/
 !srcpkgs/
 !.gitignore
+!/fetch-xtools-extra.sh
 !LICENSE
 !README.md
-!xupdate
-!xwrapper
