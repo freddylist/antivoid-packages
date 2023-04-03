@@ -1,10 +1,8 @@
 #!/bin/sh
 
-VERSION=1.0.1
-
 TAR=tar
 command -v bsdtar >/dev/null && TAR=bsdtar
-URL="https://github.com/freddylist/xtools-extra/archive/refs/tags/v${VERSION}.tar.gz"
+URL="https://github.com/freddylist/xtools-extra/archive/main.tar.gz"
 FILE="xtools-extra.tar.gz"
 
 mkdir -p /tmp/bin
