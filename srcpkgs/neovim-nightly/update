@@ -1,0 +1,2 @@
+site=https://github.com/neovim/neovim/releases/tag/nightly
+pattern='NVIM v\K[\d.]+-dev-\S+'

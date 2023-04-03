@@ -1,0 +1,48 @@
+# Template file for 'neovim-nightly'
+pkgname=neovim-nightly
+version=0.9.0.dev.1312+g908494889
+revision=1
+archs="x86_64* i686*"
+build_style=cmake
+build_helper="qemu"
+# MIN_LOG_LEVEL 1: INFO, 3: ERROR, upstream's release's default is 3
+configure_args="-DCOMPILE_LUA=OFF -DPREFER_LUA=$(vopt_if luajit OFF ON)
+ -DMIN_LOG_LEVEL=3 -DCMAKE_BUILD_TYPE=RelWithDebInfo"
+hostmakedepends="pkg-config gettext gperf lua51-lpeg lua51-mpack lua51-BitOp
+ $(vopt_if luajit LuaJIT lua51)"
+makedepends="libtermkey-devel libuv-devel libvterm-devel msgpack-devel
+ libluv-devel tree-sitter-devel $(vopt_if luajit LuaJIT-devel lua51-devel)"
+short_desc="Neovim nightly build"
+maintainer="Freddy List <antivoid-packages@freddylist.xyz>"
+license="Apache-2.0, Vim"
+homepage="https://neovim.io/"
+distfiles="https://github.com/neovim/neovim/archive/${version##*+g}.tar.gz"
+checksum=fd4bdf45f9ad61fef197ab90cdc9e0b48ba0beda2740d91bc852724e21bc5aa5
+conflicts=neovim
+
+build_options=luajit
+
+case "$XBPS_TARGET_MACHINE" in
+	riscv64*) build_options_default="" ;;
+	*) build_options_default="luajit" ;;
+esac
+
+alternatives="
+ vi:vi:/usr/bin/nvim
+ vi:vi.1:/usr/share/man/man1/nvim.1
+ vi:view:/usr/bin/nvim
+ vi:view.1:/usr/share/man/man1/nvim.1
+ vim:vim:/usr/bin/nvim
+ vim:vim.1:/usr/share/man/man1/nvim.1"
+
+# They want assertion
+CFLAGS=-UNDEBUG
+
+pre_configure() {
+	vsed -i runtime/CMakeLists.txt \
+		-e "s|\".*/bin/nvim|\${CMAKE_CROSSCOMPILING_EMULATOR} &|g"
+}
+
+post_install() {
+	vlicense LICENSE.txt
+}
