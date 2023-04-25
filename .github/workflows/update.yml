@@ -21,15 +21,12 @@ jobs:
           # Switch to repo-ci mirror
           mkdir -p /etc/xbps.d && cp /usr/share/xbps.d/*-repository-*.conf /etc/xbps.d/
           sed -i 's|repo-default|repo-ci|g' /etc/xbps.d/*-repository-*.conf
-
           # Sync and upgrade once, assume error comes from xbps update
           xbps-install -Syu || xbps-install -yu xbps
-
           # Upgrade again (in case there was a xbps update)
           xbps-install -yu
 
-          # Install xbps-src update-check dependencies
-          xbps-install -y curl grep
+      - run: ln -s /bin/chroot-curl /bin/curl
 
       - name: Clone and checkout void-packages
         uses: freddylist/treeless-checkout-action@v1
