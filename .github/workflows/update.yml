@@ -25,6 +25,8 @@ jobs:
           xbps-install -Syu || xbps-install -yu xbps
           # Upgrade again (in case there was a xbps update)
           xbps-install -yu
+          # Install grep with perl matching (for xbps-src update-check)
+          xbps-install -yf grep
 
       - run: ln -s /bin/chroot-curl /bin/curl
 
