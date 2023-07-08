@@ -1,6 +1,6 @@
 # Template file for 'neovim-nightly'
 pkgname=neovim-nightly
-version=0.10.0.dev.75+gc2e47e7be
+version=0.10.0.dev.641+g811140e27
 revision=1
 archs="x86_64* i686*"
 build_style=cmake
@@ -17,7 +17,7 @@ maintainer="Freddy List <antivoid-packages@freddylist.xyz>"
 license="Apache-2.0, Vim"
 homepage="https://neovim.io/"
 distfiles="https://github.com/neovim/neovim/archive/${version##*+g}.tar.gz"
-checksum=3dd40df9412a91484e7f7a474e18f4606a24d990dda375fa502b9aae02b085a7
+checksum=84a6ab6f9b76e358d7b2236b789edb2e5e5396406954a2541c41c69eb57f30f1
 conflicts=neovim
 
 build_options=luajit
