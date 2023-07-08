@@ -1,8 +1,8 @@
 # Template file for 'libinput-config-git'
 pkgname=libinput-config-git
-version=20230522
+version=20230708
 revision=1
-_commit=0d01d7be76e77891f9f5fc0ce89c182b71da8a06
+_commit=f373bb6777ce983368bc540b7d683cc59e274b9e
 build_style=meson
 hostmakedepends="pkg-config"
 makedepends="libinput-devel libudev-devel"
@@ -12,7 +12,7 @@ maintainer="Freddy List <antivoid-packages@freddylist.xyz>"
 license="GPL-3.0-or-later"
 homepage="https://gitlab.com/warningnonpotablewater/libinput-config"
 distfiles="https://gitlab.com/warningnonpotablewater/libinput-config/-/archive/${_commit}/libinput-config-${_commit}.tar.gz"
-checksum=d5a6eb707d41cd9ba5ef5933685ceb45d700fb629780d9aad73b3eda94400b87
+checksum=7bde71b7a5f32091f99fbe1c6a2e8265778ae8df1eee61c36574eed55a335805
 
 do_install() {
 	vinstall build/libinput-config.so 755 usr/lib
