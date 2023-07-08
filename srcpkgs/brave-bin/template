@@ -1,6 +1,6 @@
 # Template file for 'brave-bin'
 pkgname=brave-bin
-version=1.50.121
+version=1.52.130
 revision=1
 archs="x86_64"
 hostmakedepends="xz tar"
@@ -12,7 +12,7 @@ homepage="https://brave.com/"
 changelog="https://github.com/brave/brave-browser/blob/master/CHANGELOG_DESKTOP.md"
 _filename="brave-browser_${version}_amd64.deb"
 distfiles="https://github.com/brave/brave-browser/releases/download/v${version}/${_filename}"
-checksum=b15edc10d04240bb3c569253d7507bd488ee18e95ec5de66fd696fffdbeab561
+checksum=4ca080bf580674053d28372bad110f8058d938f3704c07cbac2877dc301fe355
 nostrip=yes
 
 do_extract() {
