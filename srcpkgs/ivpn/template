@@ -1,6 +1,6 @@
 # Template file for 'ivpn'
 pkgname=ivpn
-version=3.10.15
+version=3.11.5
 revision=1
 archs="x86_64"
 hostmakedepends="curl libcurl git go nodejs"
@@ -12,7 +12,7 @@ license="GPL-3.0-only"
 homepage="https://www.ivpn.net"
 changelog="https://github.com/ivpn/desktop-app/blob/master/CHANGELOG.md"
 distfiles="https://github.com/ivpn/desktop-app/archive/v${version}.tar.gz"
-checksum=14b7cbc8bd263485ac6c4dd20bcf3c418a937c85e4ae59fc39b99a9ee0ba2e01
+checksum=89c0e9f3afad95265c346374d6e09044414c284456b0ac5b10506be0235e9eef
 nopie=yes
 
 do_build() {
