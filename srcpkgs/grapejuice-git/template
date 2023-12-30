@@ -1,9 +1,9 @@
 # Template file for 'grapejuice-git'
 pkgname=grapejuice-git
 _reponame=grapejuice
-version=20230326
+version=20231230
 revision=1
-_commit=4c62170a9ff6f784d8937db542ef1166eabd1ae8
+_commit=208e82256a3ed047297f2fdd050052a83da4bb3f
 archs="i686 x86_64"
 build_style=python3-module
 hostmakedepends="tar python3-setuptools python3-pip gettext"
@@ -13,7 +13,7 @@ maintainer="Freddy List <antivoid-packages@freddylist.xyz>"
 license="GPL-3.0-only"
 homepage="https://brinkervii.gitlab.io/grapejuice/"
 distfiles="https://gitlab.com/brinkervii/${_reponame}/-/archive/${_commit}/${_reponame}-${_commit}.tar.gz"
-checksum=55cfd8d721ea1d492429263bb092625783cb5586858d5532e379a04a809c2aa0
+checksum=e7935b1e4e8087bf710c09c04e288b26a010a3a41f4b71ec9a0ff63963d8331d
 conflicts=grapejuice
 make_check=no # The tests are stupid
 
